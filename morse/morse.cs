@@ -10,7 +10,7 @@ namespace Morse
             // Déclaration des variables
             char chrChoix = ' ';  // Variable pour stocker les choix de l'utilisateur
 
-            
+            string strHexInput = ""; // Variable pour stocker le nombre hexadecimal saisi par l'utilisateur
             string strInput = ""; // Variable pour stocker le texte saisi par l'utilisateur
             string strMorseCode = "";  // Variable pour stocker le code Morse correspondant
             string strBinary = ""; // Variable pour stocker le nombre binaire saisi par l'utilisateur
@@ -19,8 +19,8 @@ namespace Morse
             
             uint uintDecimal = 0; // Variable pour stocker le nombre décimal saisi par l'utilisateur
             uint uintBinaireToDecimal = 0; // Variable pour stocker le nombre décimal converti à partir du binaire
+            uint uintHexToDecimal = 0; // Variable pour stocker le nombre décimal converti à partir de l'hexadecimal
 
-            
             // Boucle principale pour permettre à l'utilisateur de convertir plusieurs textes
             do{
                 Console.Clear(); // Efface la console pour une meilleure lisibilité
@@ -63,6 +63,7 @@ namespace Morse
                             Console.WriteLine("2. Binaire > Décimal");
                             Console.WriteLine("3. Binaire > Octal");
                             Console.WriteLine("4. Octal > Binaire");
+                            Console.WriteLine("5. Hexadecimal > Décimal");
                             Console.Write("Veuillez entrer votre choix : ");
                             chrChoix = Console.ReadKey().KeyChar;
                             Console.WriteLine();
@@ -91,6 +92,12 @@ namespace Morse
                                         strOctal = Console.ReadLine();
                                         strBinary = ConvertOctalToBinary(strOctal);
                                         Console.WriteLine("Le nombre binaire correspondant est : " + strBinary);
+                                        break;
+                                    case '5':
+                                        Console.Write("Entrez un nombre hexadecimal : ");
+                                        strHexInput = Console.ReadLine();
+                                        uintHexToDecimal = ConvertHexadecimalToDecimal(strHexInput);
+                                        Console.WriteLine("Le nombre décimal correspondant est : " + uintHexToDecimal);
                                         break;
                                     default:
                                         Console.WriteLine("Choix invalide.");
@@ -287,6 +294,41 @@ namespace Morse
 
             // Convertir le décimal en binaire
             return ConvertDecimalToBinary(uintDecimal);
+        }
+
+        // Méthode pour convertir un nombre hexadecimal en décimal
+        static uint ConvertHexadecimalToDecimal(string strHexInput)
+        {
+            uint uintDecimalResult = 0;
+            byte bytLength = (byte)strHexInput.Length;
+
+            for (int i = 0; i < bytLength; i++)
+            {
+                char c = strHexInput[bytLength - 1 - i];
+                uint uintValue;
+
+                if (c >= '0' && c <= '9')
+                {
+                    uintValue = (uint)(c - '0');
+                }
+                else if (c >= 'A' && c <= 'F')
+                {
+                    uintValue = (uint)(c - 'A' + 10);
+                }
+                else if (c >= 'a' && c <= 'f')
+                {
+                    uintValue = (uint)(c - 'a' + 10);
+                }
+                else
+                {
+                    Console.WriteLine("Erreur : Le nombre hexadecimal contient un caractère non valide.");
+                    return 0;
+                }
+
+                uintDecimalResult += uintValue * (uint)Math.Pow(16, i);
+            }
+
+            return uintDecimalResult;
         }
     }
 }
