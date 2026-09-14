@@ -9,10 +9,12 @@ namespace Morse
         {
             // Déclaration des variables
             char chrChoix = ' ';  // Variable pour stocker les choix de l'utilisateur
+
             
             string strInput = ""; // Variable pour stocker le texte saisi par l'utilisateur
             string strMorseCode = "";  // Variable pour stocker le code Morse correspondant
             string strBinary = ""; // Variable pour stocker le nombre binaire saisi par l'utilisateur
+            string strOctal = ""; // Variable pour stocker le nombre octal saisi par l'utilisateur
             string strBinaryInput = ""; // Variable pour stocker le nombre binaire saisi par l'utilisateur
             
             uint uintDecimal = 0; // Variable pour stocker le nombre décimal saisi par l'utilisateur
@@ -80,9 +82,15 @@ namespace Morse
                                         break;
                                     case '3':
                                         Console.Write("Entrez un nombre binaire : ");
+                                        strBinaryInput = Console.ReadLine();
+                                        strOctal = ConvertBinaryToOctal(strBinaryInput);
+                                        Console.WriteLine("Le nombre octal correspondant est : " + strOctal);
                                         break;
                                     case '4':
                                         Console.Write("Entrez un nombre octal : ");
+                                        strOctal = Console.ReadLine();
+                                        strBinary = ConvertOctalToBinary(strOctal);
+                                        Console.WriteLine("Le nombre binaire correspondant est : " + strBinary);
                                         break;
                                     default:
                                         Console.WriteLine("Choix invalide.");
@@ -98,10 +106,6 @@ namespace Morse
                         break;
                 }
 
-                
-
-               
-                
                 // Demande à l'utilisateur s'il souhaite convertir un autre texte
                 Console.Write("Voulez-vous continuer ? (O/N) : ");
                 chrChoix = Console.ReadKey().KeyChar;
@@ -196,7 +200,7 @@ namespace Morse
             // Parcours des bits de 31 à 0 pour construire la représentation binaire
             for (int i = 31; i >= 0; i--)
             {
-                uint uintPuissance = (uint)Math.Pow(2, i); 
+                uint uintPuissance = (uint)Math.Pow(2, i);
                 uint uintBit = uintDecimal / uintPuissance;
 
                 if (uintBit == 1)
@@ -214,6 +218,7 @@ namespace Morse
             return strResultatBinaire;
         }
 
+        // Méthode pour convertir un nombre binaire en décimal
         static uint ConvertBinaryToDecimal(string strBinaryInput)
         {
             uint uintDecimalResult = 0;
@@ -237,6 +242,51 @@ namespace Morse
             }
 
             return uintDecimalResult;
+        }
+
+        // Méthode pour convertir un nombre binaire en octal
+        static string ConvertBinaryToOctal(string strBinaryInput)
+        {
+            // Convertir le binaire en décimal
+            uint uintDecimal = ConvertBinaryToDecimal(strBinaryInput);
+
+            // Convertir le décimal en octal
+            string strOctalResult = "";
+            if (uintDecimal == 0) return "0";
+
+            while (uintDecimal > 0)
+            {
+                uint uintRemainder = uintDecimal % 8;
+                strOctalResult = uintRemainder.ToString() + strOctalResult;
+                uintDecimal /= 8;
+            }
+
+            return strOctalResult;   
+        }
+
+        // Méthode pour convertir un nombre octal en binaire
+        static string ConvertOctalToBinary(string strOctalInput)
+        {
+            // Convertir l'octal en décimal
+            uint uintDecimal = 0;
+            byte bytLength = (byte)strOctalInput.Length;
+
+            for (int i = 0; i < bytLength; i++)
+            {
+                char c = strOctalInput[bytLength - 1 - i];
+                if (c >= '0' && c <= '7')
+                {
+                    uintDecimal += (uint)(c - '0') * (uint)Math.Pow(8, i);
+                }
+                else
+                {
+                    Console.WriteLine("Erreur : Le nombre octal contient un caractère non valide.");
+                    return "";
+                }
+            }
+
+            // Convertir le décimal en binaire
+            return ConvertDecimalToBinary(uintDecimal);
         }
     }
 }
