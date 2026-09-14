@@ -1,4 +1,4 @@
-# Codification du Morse
+# Couteau Suisse
 
 Programme console écrit en C# permettant de convertir du texte en code Morse.
 Le programme propose également plusieurs conversions entre bases numériques.
