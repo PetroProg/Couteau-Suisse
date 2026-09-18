@@ -1,3 +1,24 @@
+/****************************************************************************************************************************************************************************
+* Programme morse.cs                                                                                                                                                        *     
+*                                                                                                                                                                           *     
+* Lieu   : ETML - section informatique                                                                                                                                      *     
+* Auteur : Petro Maltsev                                                                                                                                                    *     
+* Date   : 18.09.25                                                                                                                                                         *     
+*                                                                                                                                                                           *     
+* Modifications                                                                                                                                                             *     
+*    Auteur  :                                                                                                                                                              *     
+*    Version :                                                                                                                                                              *     
+*    Date    :                                                                                                                                                              *     
+*    Raisons :                                                                                                                                                              *     
+*                                                                                                                                                                           *                                                                                                                                                                           *                  
+* **************************************************************************************************************************************************************************/
+
+/****************************************************************************************************************************************************************************
+* DESCRIPTION                                                                                                                                                               *
+*                                                                                                                                                                           *
+* Le programme permet de convertir du texte en code Morse et vice-versa.                                                                                                    *
+* Aussi, il permet de convertir vers differentes bases numeriques.                                                                                                          *
+****************************************************************************************************************************************************************************/
 using System;
 using System.IO;
 
@@ -16,6 +37,8 @@ namespace Morse
             string strBinary = ""; // Variable pour stocker le nombre binaire saisi par l'utilisateur
             string strOctal = ""; // Variable pour stocker le nombre octal saisi par l'utilisateur
             string strBinaryInput = ""; // Variable pour stocker le nombre binaire saisi par l'utilisateur
+            string strMessage = ""; // Variable pour stocker le message saisi par l'utilisateur
+            string strMsgSecret = ""; // Variable pour stocker le message secret saisi par l'utilisateur
             
             uint uintDecimal = 0; // Variable pour stocker le nombre décimal saisi par l'utilisateur
             uint uintBinaireToDecimal = 0; // Variable pour stocker le nombre décimal converti à partir du binaire
@@ -29,7 +52,7 @@ namespace Morse
                 Console.WriteLine("=== Couteau Suisse - Utilitaires ===");
                 Console.WriteLine("1. Convertir du texte en code Morse");
                 Console.WriteLine("2. Convertir des nombres entre différentes bases (Décimal <> Binaire <> Octal)");
-                Console.WriteLine("3. En production");
+                Console.WriteLine("3. Stéganographie");
                 Console.Write("Veuillez entrer votre choix : ");
 
                 // Lecture du choix de l'utilisateur
@@ -105,7 +128,16 @@ namespace Morse
                                 }
                             break;
                     case '3':
-                        Console.WriteLine("En production");
+                        Console.WriteLine("Stéganographie");
+                        Console.Write("Entrez le message : ");
+                        strMessage = Console.ReadLine() ?? string.Empty;
+                        
+                        Console.Write("Entrez le message secret : ");
+                        strMsgSecret = Console.ReadLine() ?? string.Empty;
+                        
+                        string strMessageEncode = Encoder(strMessage, strMsgSecret);
+                        Console.WriteLine("Message encodé : " + strMessageEncode);
+                        SaveEncodedMessageToFile(strMessageEncode);
                         break;
 
                     default:
@@ -178,7 +210,8 @@ namespace Morse
         // Méthode pour sauvegarder le code Morse dans un fichier
         static void SaveResponseToFile(string strMorseCode)
         {
-            string strFilePath = @"E:\Modules\I114\Projet\Codification-du-Morse\reponseMorse.txt"; // Définition du chemin du fichier de sortie
+            // Remonte de bin/Debug/netX.0 jusqu'à la racine du projet
+            string strFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\reponseMorse.txt");
 
             Console.Write("Voulez-vous sauvegarder le code Morse dans un fichier ? (O/N) : ");
             char chrChoix = Console.ReadKey().KeyChar;
@@ -329,6 +362,16 @@ namespace Morse
             }
 
             return uintDecimalResult;
+        }
+
+        // Méthode pour encoder un message avec un message secret (stéganographie)
+        static string Encoder(string strMessage, string strMsgSecret){
+            return "";
+        }
+
+        // Méthode pour sauvegarder le message encodé dans un fichier
+        static void SaveEncodedMessageToFile(string strMessageEncode){
+
         }
     }
 }
