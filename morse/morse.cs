@@ -21,6 +21,7 @@
 ****************************************************************************************************************************************************************************/
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Morse
 {
@@ -364,14 +365,105 @@ namespace Morse
             return uintDecimalResult;
         }
 
+        // Méthode pour convertir le code morse en texte invisible
+        static string MorseToInvisible(string strMorse)
+        {
+            string strResultat = "";
+            // Implémentation pour convertir le code morse en texte invisible
+
+            foreach (char c in strMorse)
+            {
+                if (c == '.')
+                {
+                    strResultat += '\u200B'; // Caractère invisible pour le point
+                }
+                else if (c == '-')
+                {
+                    strResultat += '\u200C'; // Caractère invisible pour le tiret
+                }
+                else if (c == ' ')
+                {
+                    strResultat += '\u200D'; // Caractère invisible pour l'espace
+                }
+                else if (c == '/')
+                {
+                    strResultat += '\u002F'; // Caractère invisible pour le séparateur de mots
+                }
+                else
+                {
+                    // Ignorer les caractères non valides
+                }
+            }
+
+            return strResultat;
+        }
+
+
         // Méthode pour encoder un message avec un message secret (stéganographie)
         static string Encoder(string strMessage, string strMsgSecret){
-            return "";
+            // Vérification que le message secret ne contient que des lettres majuscules et des espaces
+            string strRegex = "^[A-Z ]+$";
+            bool bMessageValid = System.Text.RegularExpressions.Regex.IsMatch(strMsgSecret, strRegex, RegexOptions.IgnoreCase);
+            if(!bMessageValid)
+            {
+                throw new ArgumentException("Les messages doivent contenir uniquement des lettres majuscules et des espaces.");
+            }
+
+            strMsgSecret = strMsgSecret.ToUpper();
+            string strMorse = ConvertToMorse(strMsgSecret);
+            string strInvisibleTexte = MorseToInvisible(strMorse);
+
+            if (strInvisibleTexte.Length == 0)
+            {
+                return strMessage; // Aucun message secret à encoder
+            }
+
+            if (strMessage.Length == 0)
+            {
+                throw new ArgumentException("Le message principal ne peut pas être vide.");
+            }
+
+            string strResultat = "";
+            int intPointer = 0;
+            int intMessageLength = strMessage.Length;
+            int intInvisibleTexte = strInvisibleTexte.Length;
+
+            // Calculer le quota d'insertion pour chaque caractère du message principal
+            for(int i = 0; i < intMessageLength; i++)
+            {
+                strResultat += strMessage[i];
+
+               int intQuota = (int)Math.Ceiling((double)(i + 1) * intInvisibleTexte / intMessageLength);
+
+                while (intPointer < intQuota)
+                {
+                    strResultat += strInvisibleTexte[intPointer];
+                    intPointer++;
+                }
+            }
+
+            return strResultat;
         }
 
         // Méthode pour sauvegarder le message encodé dans un fichier
         static void SaveEncodedMessageToFile(string strMessageEncode){
+            
+            string strFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\messageEncode.txt");
 
+            Console.Write("Voulez-vous sauvegarder le message encodé dans un fichier ? (O/N) : ");
+            char chrChoix = Console.ReadKey().KeyChar;
+            Console.WriteLine(); // Pour passer à la ligne suivante
+
+            if (chrChoix == 'O' || chrChoix == 'o' && File.Exists(strFilePath) == false)
+            {
+                // Écriture du message encodé dans le fichier
+                File.WriteAllText(strFilePath, strMessageEncode);
+            }
+            else if (chrChoix == 'O' || chrChoix == 'o' && File.Exists(strFilePath) == true)
+            {
+                // Si le fichier existe déjà, on ajoute le message encodé à la fin du fichier existant
+                File.AppendAllText(strFilePath, strMessageEncode + Environment.NewLine);
+            }
         }
     }
 }
