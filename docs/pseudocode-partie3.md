@@ -1,3 +1,4 @@
+```text
 FONCTION Encoder (textePorteur, messageSecret)
     messageSecret := MettreEnMajuscules(messageSecret)
     SI NON ValiderCaracteres(messageSecret) ALORS
@@ -23,3 +24,4 @@ FONCTION Encoder (textePorteur, messageSecret)
 
     RETOURNER resultat
 FIN FONCTION
+```text
