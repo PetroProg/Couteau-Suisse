@@ -1,3 +1,4 @@
+```text
 DEBUT ConvertirDecimalVersBinaire(nombreEntree)
     // La méthode reçoit un entier non signé et renvoie une chaîne de caractères.
 
