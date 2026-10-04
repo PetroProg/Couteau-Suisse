@@ -24,4 +24,4 @@ FONCTION Encoder (textePorteur, messageSecret)
 
     RETOURNER resultat
 FIN FONCTION
-```text
+
