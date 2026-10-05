@@ -27,6 +27,21 @@ namespace Morse
 {
     class MorseCodeConverter
     {
+        // Définition des lettres et de leur correspondance en code Morse
+        private static readonly char[] tabLettres =
+        {
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+            'U', 'V', 'W', 'X', 'Y', 'Z'
+        };
+        // Correspondance des lettres avec le code Morse
+        private static readonly string[] tabMorse =
+        {
+            ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+            "..-", "...-", ".--", "-..-", "-.--", "--.."
+        };
+
         static void Main(string[] args)
         {
             // Déclaration des variables
@@ -127,19 +142,39 @@ namespace Morse
                                         Console.WriteLine("Choix invalide.");
                                         break;
                                 }
-                            break;
+                        break;
                     case '3':
                         Console.WriteLine("Stéganographie");
-                        Console.Write("Entrez le message : ");
-                        strMessage = Console.ReadLine() ?? string.Empty;
-                        
-                        Console.Write("Entrez le message secret : ");
-                        strMsgSecret = Console.ReadLine() ?? string.Empty;
-                        
-                        string strMessageEncode = Encoder(strMessage, strMsgSecret);
-                        Console.WriteLine("Message encodé : " + strMessageEncode);
-                        SaveEncodedMessageToFile(strMessageEncode);
-                        break;
+                        Console.WriteLine("1. Décoder un message encodé");
+                        Console.WriteLine("2. Encoder un message avec un message secret");
+                        Console.Write("Veuillez entrer votre choix : ");
+                        chrChoix = Console.ReadKey().KeyChar;
+                        switch (chrChoix)
+                        {
+                            case '1':
+                                Console.WriteLine("Décoder un message encodé");
+                                Console.Write("Entrez le message encodé : ");
+                                strMessage = Console.ReadLine() ?? string.Empty;
+                                
+                                string strMessageDecode = Decoder(strMessage);
+                                Console.WriteLine("Message décodé : " + strMessageDecode);
+                                break;
+                            case '2':
+                                Console.Write("Entrez le message : ");
+                                strMessage = Console.ReadLine() ?? string.Empty;
+                                
+                                Console.Write("Entrez le message secret : ");
+                                strMsgSecret = Console.ReadLine() ?? string.Empty;
+                                
+                                string strMessageEncode = Encoder(strMessage, strMsgSecret);
+                                Console.WriteLine("Message encodé : " + strMessageEncode);
+                                SaveEncodedMessageToFile(strMessageEncode);
+                                break;
+                            default:
+                                Console.WriteLine("Choix invalide.");
+                                break;
+                        }
+                    break;
 
                     default:
                         Console.WriteLine("Choix invalide.");
@@ -169,22 +204,6 @@ namespace Morse
         // Méthode pour convertir un texte en code Morse
         static string ConvertToMorse(string strInput)
         {
-            // Définition des lettres et de leur correspondance en code Morse
-            char[] tabLettres =
-            {
-                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-                'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-                'U', 'V', 'W', 'X', 'Y', 'Z'
-            };
-
-            // Correspondance des lettres avec le code Morse
-            string[] tabMorse =
-            {
-                ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
-                "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
-                "..-", "...-", ".--", "-..-", "-.--", "--.."
-            };
-
             string strReponse = ""; // Variable pour stocker le code Morse final
 
             // Conversion de l'entrée utilisateur en majuscules
@@ -387,7 +406,7 @@ namespace Morse
                 }
                 else if (c == '/')
                 {
-                    strResultat += '\u002F'; // Caractère invisible pour le séparateur de mots
+                    strResultat += '\u2060'; // Caractère invisible pour le séparateur de mots
                 }
                 else
                 {
@@ -464,6 +483,74 @@ namespace Morse
                 // Si le fichier existe déjà, on ajoute le message encodé à la fin du fichier existant
                 File.AppendAllText(strFilePath, strMessageEncode + Environment.NewLine);
             }
+        }
+
+        // Méthode pour décoder un message encodé avec un message secret (stéganographie)
+        static string Decoder(string strMessageDecode)
+        {
+            string strCodeMorse = InvisibleToMorse(strMessageDecode);
+
+            if (strCodeMorse.Length == 0)
+            {
+                Console.WriteLine("Aucun message invisible trouvé.");
+                return "";
+            }
+
+            string strResultatFinal = ConvertMorseToText(strCodeMorse);
+
+            return strResultatFinal;    
+        }
+
+        // Méthode pour convertir le texte invisible en code morse
+        static string InvisibleToMorse(string strMessageEncode)
+        {
+            string strResultatMorse = "";
+            foreach (char c in strMessageEncode)
+            {             
+                if (c == '\u200B') // Caractère invisible pour le point
+                {
+                    strResultatMorse += '.';
+                }
+                else if (c == '\u200C') // Caractère invisible pour le tiret
+                {
+                    strResultatMorse += '-';
+                }
+                else if (c == '\u200D') // Caractère invisible pour l'espace
+                {
+                    strResultatMorse += ' ';
+                }
+                else if (c == '\u2060') // Caractère invisible pour le séparateur de mots
+                {
+                    strResultatMorse += '/';
+                }
+                else
+                {
+                    // Ignorer les caractères non valides
+                }
+            }
+            return strResultatMorse;
+        }
+
+        static string ConvertMorseToText(string strMorse)
+        {
+            string strResultat = "";
+            string[] strMots = strMorse.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string mot in strMots)
+            {
+                string[] strLetters = mot.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                foreach (string strLetter in strLetters)
+                {
+                    int intIndex = Array.IndexOf(tabMorse, strLetter);
+                    if (intIndex >= 0)
+                    {
+                        strResultat += tabLettres[intIndex];
+                    }         
+                }
+
+                strResultat += " "; // Ajouter un espace entre les mots
+            }
+            return strResultat.Trim(); // Supprimer l'espace final
         }
     }
 }
