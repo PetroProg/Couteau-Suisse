@@ -79,6 +79,7 @@ namespace Morse
                 switch (chrChoix)
                 {
                     case '1':
+                            Console.Clear();
                             Console.Write("Entrez un mot ou une phrase (sans accents, lettres A-Z) : ");
 
                             // Lecture de l'entrée utilisateur
@@ -98,6 +99,7 @@ namespace Morse
                             SaveResponseToFile(strMorseCode);
                         break;
                     case '2':
+                            Console.Clear();
                             Console.WriteLine("1. Décimal > Binaire");
                             Console.WriteLine("2. Binaire > Décimal");
                             Console.WriteLine("3. Binaire > Octal");
@@ -144,25 +146,48 @@ namespace Morse
                                 }
                         break;
                     case '3':
+                        Console.Clear();
                         Console.WriteLine("Stéganographie");
-                        Console.WriteLine("1. Décoder un message encodé");
-                        Console.WriteLine("2. Encoder un message avec un message secret");
+                        Console.WriteLine("1. Décoder un message depuis un fichier txt");
+                        Console.WriteLine("2. Encoder un message vers un fichier txt");
                         Console.Write("Veuillez entrer votre choix : ");
                         chrChoix = Console.ReadKey().KeyChar;
                         switch (chrChoix)
                         {
                             case '1':
-                                Console.WriteLine("Décoder un message encodé");
-                                Console.Write("Entrez le message encodé : ");
-                                strMessage = Console.ReadLine() ?? string.Empty;
-                                
-                                string strMessageDecode = Decoder(strMessage);
-                                Console.WriteLine("Message décodé : " + strMessageDecode);
+                                // Remonte de bin/Debug/netX.0 jusqu'à la racine du projet
+                                string strFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\messageEncode.txt");
+
+                                if (!File.Exists(strFilePath))
+                                {
+                                    Console.WriteLine("Le fichier n'existe pas.");
+                                    break;
+                                }
+
+                                string strMessageFromFile = File.ReadAllText(strFilePath);
+
+                                if (string.IsNullOrEmpty(strMessageFromFile))
+                                {
+                                    Console.WriteLine("Le fichier est vide.");
+                                    break;
+                                }
+
+                                string strMessageDecode = Decoder(strMessageFromFile);
+
+                                if (string.IsNullOrEmpty(strMessageDecode))
+                                {
+                                    Console.WriteLine("Erreur lors du décodage.");
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("\nMessage décodé : " + strMessageDecode);
+                                } 
                                 break;
                             case '2':
-                                Console.Write("Entrez le message : ");
+                                Console.Write("\nEntrez le message : ");
                                 strMessage = Console.ReadLine() ?? string.Empty;
-                                
+
                                 Console.Write("Entrez le message secret : ");
                                 strMsgSecret = Console.ReadLine() ?? string.Empty;
                                 
