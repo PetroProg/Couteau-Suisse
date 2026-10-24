@@ -18,10 +18,16 @@ Le programme propose également plusieurs conversions entre bases numériques.
 
 ## Lancer le programme
 
-Depuis le dossier du projet, exécuter :
+Depuis la racine du dépôt (`Couteau-Suisse`), exécuter :
 
 ```bash
-dotnet run --project morse/morse.csproj
+dotnet run --project .\morse\morse.csproj
+```
+
+Si le terminal est déjà dans le dossier `morse`, exécuter :
+
+```bash
+dotnet run --project .\morse.csproj
 ```
 
 Puis choisir une option dans le menu affiché dans la console.

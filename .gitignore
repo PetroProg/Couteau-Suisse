@@ -1,5 +1,7 @@
 /morse/.vs
 /morse/bin
 /morse/obj
- .vs/
- .vs/
+
+.vs/
+bin/
+obj/

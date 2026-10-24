@@ -62,23 +62,25 @@ namespace Morse
 
             // Boucle principale pour permettre à l'utilisateur de convertir plusieurs textes
             do{
-                Console.Clear(); // Efface la console pour une meilleure lisibilité
+                try { 
 
-                // Affichage du menu principal
-                Console.WriteLine("=== Couteau Suisse - Utilitaires ===");
-                Console.WriteLine("1. Convertir du texte en code Morse");
-                Console.WriteLine("2. Convertir des nombres entre différentes bases (Décimal <> Binaire <> Octal)");
-                Console.WriteLine("3. Stéganographie");
-                Console.Write("Veuillez entrer votre choix : ");
+                    Console.Clear(); // Efface la console pour une meilleure lisibilité
 
-                // Lecture du choix de l'utilisateur
-                chrChoix = Console.ReadKey().KeyChar;
-                Console.WriteLine();
-                Console.WriteLine("==========================================================");
-                // Traitement du choix de l'utilisateur
-                switch (chrChoix)
-                {
-                    case '1':
+                    // Affichage du menu principal
+                    Console.WriteLine("=== Couteau Suisse - Utilitaires ===");
+                    Console.WriteLine("1. Convertir du texte en code Morse");
+                    Console.WriteLine("2. Convertir des nombres entre différentes bases (Décimal <> Binaire <> Octal)");
+                    Console.WriteLine("3. Stéganographie");
+                    Console.Write("Veuillez entrer votre choix : ");
+
+                    // Lecture du choix de l'utilisateur
+                    chrChoix = Console.ReadKey().KeyChar;
+                    Console.WriteLine();
+                    Console.WriteLine("==========================================================");
+                    // Traitement du choix de l'utilisateur
+                    switch (chrChoix)
+                    {
+                        case '1':
                             Console.Clear();
                             Console.Write("Entrez un mot ou une phrase (sans accents, lettres A-Z) : ");
 
@@ -98,7 +100,7 @@ namespace Morse
                             // Option pour sauvegarder le code Morse dans un fichier
                             SaveResponseToFile(strMorseCode);
                         break;
-                    case '2':
+                        case '2':
                             Console.Clear();
                             Console.WriteLine("1. Décimal > Binaire");
                             Console.WriteLine("2. Binaire > Décimal");
@@ -145,7 +147,7 @@ namespace Morse
                                         break;
                                 }
                         break;
-                    case '3':
+                        case '3':
                         Console.Clear();
                         Console.WriteLine("Stéganographie");
                         Console.WriteLine("1. Décoder un message depuis un fichier txt");
@@ -199,11 +201,16 @@ namespace Morse
                                 Console.WriteLine("Choix invalide.");
                                 break;
                         }
-                    break;
+                        break;
 
-                    default:
+                        default:
                         Console.WriteLine("Choix invalide.");
                         break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Une erreur est survenue : " + ex.Message);
                 }
 
                 // Demande à l'utilisateur s'il souhaite convertir un autre texte
