@@ -11,6 +11,8 @@ Le programme propose également plusieurs conversions entre bases numériques.
 - Convertir un nombre octal en binaire.
 - Convertir un nombre hexadécimal en décimal.
 - Sauvegarder une réponse Morse dans `reponseMorse.txt`.
+- Encoder un message secret dans un texte à l'aide de caractères invisibles.
+- Décoder un message secret depuis `messageEncode.txt`.
 
 ## Prérequis
 
@@ -32,6 +34,16 @@ dotnet run --project .\morse.csproj
 
 Puis choisir une option dans le menu affiché dans la console.
 
+## Stéganographie
+
+L'option `3. Stéganographie` propose deux opérations :
+
+- Encoder un message secret composé de lettres et d'espaces dans un message porteur.
+- Décoder le message secret contenu dans `messageEncode.txt`.
+
+Lors de l'encodage, le résultat peut être sauvegardé dans `messageEncode.txt`.
+Le message secret est converti en Morse puis représenté avec des caractères invisibles.
+
 ## Exemple
 
 ```text
@@ -48,3 +60,12 @@ Binaire 1010     → Octal      12
 Octal 12         → Binaire    1010
 Hexadécimal A    → Décimal    10
 ```
+
+## Documentation
+
+Les étapes de conception et les algorithmes du projet sont disponibles dans le
+dossier `docs/` :
+
+- `pseudocode-partie1.md` : conversion de texte en code Morse.
+- `pseudocode-partie2.md` : conversions entre bases numériques.
+- `pseudocode-partie3.md` : encodage stéganographique.
